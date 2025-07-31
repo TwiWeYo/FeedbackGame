@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4402568161664801114}
   - component: {fileID: 1846911858225175030}
+  - component: {fileID: 5377517831385257755}
+  - component: {fileID: 6587781848862126450}
   m_Layer: 0
   m_Name: AttackIndicator
   m_TagString: AttackIndicator
@@ -87,3 +89,42 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!65 &5377517831385257755
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 890405113883838847}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 0.2}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &6587781848862126450
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 890405113883838847}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 041e28b142439434a8746c3b9b4a4a03, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inputManager: {fileID: 4950846699505640003, guid: 24f0d14173689c740b9d6176941b52d7, type: 3}
+  pathHighlight: {fileID: 8734223659124659371, guid: aac2af85817beb444b1f20c6010925a1, type: 3}
+  player: {fileID: 0}
+  grid: {fileID: 0}
+  moveSteps: []
+  position: {x: 0, y: 0}

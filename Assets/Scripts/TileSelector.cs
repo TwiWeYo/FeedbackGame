@@ -25,6 +25,8 @@ public class TileSelector : MonoBehaviour
     [SerializeField]
     private AttackDatabaseSO db;
     private int selectedAttackType = -1;
+    
+    public int gridSize = 4;
 
     private void Start()
     {
@@ -65,14 +67,11 @@ public class TileSelector : MonoBehaviour
         ClearAttackIndicators();
         var playerPosition3D = grid.WorldToCell(player.transform.position);
 
-        var destinations = db.AttackTypes[selectedAttackType].DestinationPoints;
+        var attackType = db.AttackTypes[selectedAttackType];
 
-        var allPossibleAttackDestinations = destinations
-            .Select(q => new[] { playerPosition3D + new Vector3Int(q.x, q.y, playerPosition3D.z), playerPosition3D - new Vector3Int(q.x, q.y, playerPosition3D.z) })
-            .SelectMany(q => q)
-            .ToArray();
+        var allPaths = attackType.GetAllPaths();
 
-        foreach (var destination in allPossibleAttackDestinations)
+        foreach (var destination in allPaths)
         {
             var indicator = Instantiate(attackCellIndicator);
 
@@ -80,7 +79,8 @@ public class TileSelector : MonoBehaviour
             var spriteBounds = spriteRenderer.bounds;
             var pivotOffset = spriteRenderer.transform.position - spriteBounds.min;
 
-            indicator.transform.position = grid.CellToWorld(destination) + pivotOffset;
+            var finalPoint = destination.Last();
+            indicator.transform.position = grid.CellToWorld(playerPosition3D + new Vector3Int(finalPoint.x, finalPoint.y, 0)) + pivotOffset;
         }
     }
 
