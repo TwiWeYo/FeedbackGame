@@ -1,5 +1,5 @@
-using NUnit.Framework;
-using System;
+using Assets.Extensions;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -11,30 +11,40 @@ public class TileSelector : MonoBehaviour
     [SerializeField]
     private GameObject cellIndicator;
     [SerializeField]
-    private GameObject attackCellIndicator;
-    [SerializeField]
     private GameObject gridVizualization;
-
-
-    [SerializeField]
-    private Grid grid;
+    [SerializeReference]
+    private AttackPath attackPathPrefab;
 
     [SerializeField]
-    private GameObject player;
+    private GameGrid gameGrid;
 
     [SerializeField]
     private AttackDatabaseSO db;
     private int selectedAttackType = -1;
-    
-    public int gridSize = 4;
+
+    private bool isPlayerTurn;
+    public bool IsPlayerTurn
+    {
+        get => isPlayerTurn;
+        set
+        {
+            Debug.Log(isPlayerTurn);
+            isPlayerTurn = value;
+        }
+    }
 
     private void Start()
     {
         StopAttacking();
+        IsPlayerTurn = true;
+        InvokeRepeating("MoveEnemies", 5f, 5f);
     }
 
     public void StartAttacking(int id)
     {
+        if (!IsPlayerTurn)
+            return;
+
         selectedAttackType = db.AttackTypes.FindIndex(q => q.Id == id);
         if (selectedAttackType < 0)
         {
@@ -49,12 +59,15 @@ public class TileSelector : MonoBehaviour
 
         inputManager.OnClicked += Attack;
         inputManager.OnExit += StopAttacking;
+
+        gameGrid.OnAllEnemiesKilled += () => IsPlayerTurn = true;
     }
 
     private void StopAttacking()
     {
         selectedAttackType = -1;
-        ClearAttackIndicators();
+
+        gameGrid.ClearIndicators();
 
         gridVizualization.SetActive(false);
         cellIndicator.SetActive(false);
@@ -64,58 +77,74 @@ public class TileSelector : MonoBehaviour
 
     private void HighlightAttackDestinations()
     {
-        ClearAttackIndicators();
-        var playerPosition3D = grid.WorldToCell(player.transform.position);
+        gameGrid.ClearIndicators();
 
         var attackType = db.AttackTypes[selectedAttackType];
 
-        var allPaths = attackType.GetAllPaths();
+        var allPaths = attackType.GetAllPaths(gameGrid.playerPosition);
 
         foreach (var destination in allPaths)
         {
-            var indicator = Instantiate(attackCellIndicator);
+            var attackPath = Instantiate(attackPathPrefab);
+            attackPath.SetPath(destination);
 
-            var spriteRenderer = indicator.GetComponent<SpriteRenderer>();
-            var spriteBounds = spriteRenderer.bounds;
-            var pivotOffset = spriteRenderer.transform.position - spriteBounds.min;
-
-            var finalPoint = destination.Last();
-            indicator.transform.position = grid.CellToWorld(playerPosition3D + new Vector3Int(finalPoint.x, finalPoint.y, 0)) + pivotOffset;
+            if (!gameGrid.PlaceIndicator(attackPath))
+            {
+                attackPath.DestroySelfAndChildren(attackPath);
+            }
         }
     }
 
     private void Attack()
     {
+        if (!IsPlayerTurn)
+            return;
+
         if (inputManager.IsMouseOverUI())
             return;
 
-        player.transform.position = GetCellPosition(player);
+        var mousePosition = inputManager.GetMousePosition();
+
+        IsPlayerTurn = false;
+        
+        if (!gameGrid.MovePlayer(mousePosition))
+        {
+            IsPlayerTurn = true;
+            return;
+        }
+
         StopAttacking();
     }
 
-    private void ClearAttackIndicators()
+    private void MoveEnemies()
     {
-        var indicators = GameObject.FindGameObjectsWithTag("AttackIndicator");
-        foreach (var indicator in indicators)
+        IsPlayerTurn = false;
+
+        var enemyPositions = new Dictionary<Vector3Int, Enemy>(gameGrid.enemyPositions);
+
+        gameGrid.MoveShadow();
+        foreach (var (position, enemy) in enemyPositions)
         {
-            GameObject.Destroy(indicator);
+            var attackType = db.AttackTypes[enemy.AttackId];
+
+            var allPaths = attackType.GetAllPaths(position);
+            var legalPaths = gameGrid.GetAllLegalEnemyPaths(allPaths);
+
+            var preferredPath = enemy.Behavior switch
+            {
+                EnemyBehaviors.MoveCloser => legalPaths.MinBy(q => (q.Last() - gameGrid.playerPosition).magnitude),
+                EnemyBehaviors.MoveAway => legalPaths.MaxBy(q => (q.Last() - gameGrid.playerPosition).magnitude),
+                _ => legalPaths[Random.Range(0, legalPaths.Count)]
+            };
+
+            gameGrid.MoveEnemy(enemy, preferredPath);
         }
+        IsPlayerTurn = true;
     }
 
     void Update()
     {
-        cellIndicator.transform.position = GetCellPosition(cellIndicator);
-    }
-
-    private Vector3 GetCellPosition(GameObject gameObject)
-    {
-        var mousePosition = inputManager.GetSelectedMapPosition();
-        var gridPosition = grid.WorldToCell(mousePosition);
-
-        var spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
-        var spriteBounds = spriteRenderer.bounds;
-        var pivotOffset = spriteRenderer.transform.position - spriteBounds.min;
-
-        return grid.CellToWorld(gridPosition) + pivotOffset;
+        var cellPosition = gameGrid.GetCellPosition(inputManager.GetMousePosition());
+        cellIndicator.transform.position = gameGrid.GetWorldPosition(cellIndicator, cellPosition);
     }
 }

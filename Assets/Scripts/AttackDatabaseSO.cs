@@ -44,6 +44,27 @@ public class AttackType
                 resultVector += directions[c];
                 innerList.Add(resultVector);
             }
+
+            res.Add(innerList);
+        }
+
+        return res;
+    }
+
+    public List<List<Vector3Int>> GetAllPaths(Vector3Int playerPosition)
+    {
+        var res = new List<List<Vector3Int>>();
+        foreach (var path in Paths)
+        {
+            var innerList = new List<Vector3Int>();
+            var resultVector = playerPosition;
+            foreach (var c in path)
+            {
+                resultVector += new Vector3Int(directions[c].x, directions[c].y, 0);
+                innerList.Add(resultVector);
+            }
+
+            res.Add(innerList);
         }
 
         return res;

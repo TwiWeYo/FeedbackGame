@@ -24,8 +24,11 @@ public class InputManager : MonoBehaviour
 
     public bool IsMouseOverUI() => EventSystem.current.IsPointerOverGameObject();
 
-    public Vector2 GetSelectedMapPosition()
+    public Vector2 GetMousePosition()
     {
+        if (mainCamera == null)
+            return lastPosition;
+
         var mousePosition = Input.mousePosition;
 
         var ray = mainCamera.ScreenPointToRay(mousePosition);
