@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class AttackDatabaseSO : ScriptableObject
@@ -13,6 +12,20 @@ public class AttackType
 {
     [field: SerializeField]
     public int Id { get; private set; }
+    [field: SerializeField]
+    public string AttackName { get; private set; }
+    [field: SerializeField]
+    public Sprite AttackIcon { get; private set; }
+    [field: SerializeField]
+    public string Description { get; private set; }
+    [field: SerializeField]
+    public int WaveNumberUnlock {  get; private set; }
+    [field: SerializeField]
+    public bool IsItem { get; private set; }
+    [field: SerializeField]
+    public bool IsOnlyForEnemies { get; private set; }
+
+
     [field: SerializeField]
     public string[] Paths { get; private set; }
     [field: SerializeField]

@@ -31,8 +31,7 @@ public class GameGrid : MonoBehaviour
     
     private void Start()
     {
-        StartLevel();
-        OnAllEnemiesKilled += StartLevel;
+        InventorySystem.Instance.OnSkillBuyExit += StartLevel;
     }
 
     private void StartLevel()
@@ -108,17 +107,13 @@ public class GameGrid : MonoBehaviour
 
     public Vector3 GetWorldPosition(GameObject gameObject, Vector3Int cellPosition)
     {
-        var spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
-        if (spriteRenderer == null)
-        {
-            Debug.LogError($"SpriteRenderer not found on {gameObject.name}!");
-            return Vector3.zero; // or some other default
-        }
+        Vector3 cellWorldPosition = grid.CellToWorld(cellPosition);
 
-        var spriteBounds = spriteRenderer.bounds;
-        var pivotOffset = gameObject.transform.position - spriteBounds.min;
+        Vector3 cellSize = grid.cellSize;
 
-        return grid.CellToWorld(cellPosition) + pivotOffset;
+        Vector3 centerOffset = new Vector3(cellSize.x / 2f, cellSize.y / 2f, 0f);
+
+        return cellWorldPosition + centerOffset;
     }
 
     public Vector3Int GetCellPosition(Vector3 position) => grid.WorldToCell(position);

@@ -1,4 +1,7 @@
+using NUnit.Framework;
+using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,8 +14,9 @@ public class AttackButton : MonoBehaviour
     [SerializeField]
     private bool isItem;
 
-    [SerializeField]
-    private int attackId;
+    public int attackId;
+    public Image skillIconImage;
+    public TextMeshProUGUI skillNameText; // Для отображения названия скилла
 
     private bool isUsed;
 
@@ -21,13 +25,38 @@ public class AttackButton : MonoBehaviour
     {
         button = GetComponent<Button>();
         button.onClick.AddListener(SelectAttack);
-        gameManager.gameGrid.PlayerManager.OnPlayerMoved += q => isUsed = isItem && q.Any();
+
+        if (attackId < 0)
+        {
+            Setup(null);
+        }
     }
 
-    public void UpdateItem(int attackId)
+    public void Setup(AttackType attack)
     {
-        isUsed = false;
-        this.attackId = attackId;
+        if (attack != null)
+        {
+            attackId = attack.Id;
+            button.interactable = true;
+
+            if (attack.AttackIcon != null)
+            {
+                skillIconImage.sprite = attack.AttackIcon;
+                skillIconImage.enabled = true; // Показываем иконку
+            }
+
+            if (skillNameText != null) skillNameText.text = attack.AttackName;
+        }
+        else
+        {
+            if (skillIconImage?.sprite != null)
+                skillIconImage.sprite = null;
+
+            if (skillNameText != null)
+                skillNameText.text = isItem ? "Used!" : "Locked";
+
+            button.interactable = false;
+        }
     }
 
     private void SelectAttack()
@@ -35,6 +64,12 @@ public class AttackButton : MonoBehaviour
         if (isUsed)
             return;
 
-        gameManager.StartAttacking(attackId);
+        gameManager.StartAttacking(attackId, this, isItem);
+    }
+
+    private void UpdateIsUsed(List<Vector3Int> moves)
+    {
+        isUsed = moves.Any();
+        gameManager.gameGrid.PlayerManager.OnPlayerMoved -= UpdateIsUsed;
     }
 }

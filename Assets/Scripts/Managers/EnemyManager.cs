@@ -27,7 +27,7 @@ public class EnemyManager : MonoBehaviour
             }
             while (enemyPosition == grid.playerPosition || enemyPosition == grid.shadowPosition || grid.enemyPositions.ContainsKey(enemyPosition));
 
-            var enemyType = Random.Range(0, 10) > 6 ? 1 : 0;
+            var enemyType = Random.Range(0, enemyPrefabs.Length);
 
             var enemy = Instantiate(enemyPrefabs[enemyType], grid.GetWorldPosition(enemyPrefabs[enemyType].gameObject, enemyPosition), Quaternion.identity);
 
