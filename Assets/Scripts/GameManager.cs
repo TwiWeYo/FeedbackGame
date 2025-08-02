@@ -1,9 +1,7 @@
-using Assets.Extensions;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
-public class TileSelector : MonoBehaviour
+public class GameManager : MonoBehaviour
 {
     [SerializeField]
     private InputManager inputManager;
@@ -16,28 +14,21 @@ public class TileSelector : MonoBehaviour
     private AttackPath attackPathPrefab;
 
     [SerializeField]
-    private GameGrid gameGrid;
+    public GameGrid gameGrid;
 
     [SerializeField]
     private AttackDatabaseSO db;
     private int selectedAttackType = -1;
 
-    private bool isPlayerTurn;
-    public bool IsPlayerTurn
-    {
-        get => isPlayerTurn;
-        set
-        {
-            Debug.Log(isPlayerTurn);
-            isPlayerTurn = value;
-        }
-    }
-
+    public bool IsPlayerTurn { get; private set; }
     private void Start()
     {
         StopAttacking();
         IsPlayerTurn = true;
-        InvokeRepeating("MoveEnemies", 5f, 5f);
+
+        gameGrid.PlayerManager.OnPlayerMoved += FinishAttacking;
+
+        gameGrid.OnAllEnemiesKilled += () => IsPlayerTurn = true;
     }
 
     public void StartAttacking(int id)
@@ -60,14 +51,13 @@ public class TileSelector : MonoBehaviour
         inputManager.OnClicked += Attack;
         inputManager.OnExit += StopAttacking;
 
-        gameGrid.OnAllEnemiesKilled += () => IsPlayerTurn = true;
     }
 
     private void StopAttacking()
     {
         selectedAttackType = -1;
 
-        gameGrid.ClearIndicators();
+        gameGrid.PlayerManager.ClearIndicators();
 
         gridVizualization.SetActive(false);
         cellIndicator.SetActive(false);
@@ -77,7 +67,7 @@ public class TileSelector : MonoBehaviour
 
     private void HighlightAttackDestinations()
     {
-        gameGrid.ClearIndicators();
+        gameGrid.PlayerManager.ClearIndicators();
 
         var attackType = db.AttackTypes[selectedAttackType];
 
@@ -88,7 +78,7 @@ public class TileSelector : MonoBehaviour
             var attackPath = Instantiate(attackPathPrefab);
             attackPath.SetPath(destination);
 
-            if (!gameGrid.PlaceIndicator(attackPath))
+            if (!gameGrid.PlayerManager.PlaceIndicator(attackPath))
             {
                 attackPath.DestroySelfAndChildren(attackPath);
             }
@@ -104,41 +94,26 @@ public class TileSelector : MonoBehaviour
             return;
 
         var mousePosition = inputManager.GetMousePosition();
-
-        IsPlayerTurn = false;
-        
-        if (!gameGrid.MovePlayer(mousePosition))
-        {
-            IsPlayerTurn = true;
-            return;
-        }
-
-        StopAttacking();
+        gameGrid.PlayerManager.MovePlayer(mousePosition);
     }
 
-    private void MoveEnemies()
+    private void FinishAttacking(List<Vector3Int> path)
     {
+        gameGrid.ShadowManager.ShadowMoveset.Add(path);
+
         IsPlayerTurn = false;
+        StopAttacking();
+        EnemiesTurn();
+    }
 
-        var enemyPositions = new Dictionary<Vector3Int, Enemy>(gameGrid.enemyPositions);
+    private void EnemiesTurn()
+    {
+        if (gameGrid.CheckIfAllEnemiesKilled())
+            return;
 
-        gameGrid.MoveShadow();
-        foreach (var (position, enemy) in enemyPositions)
-        {
-            var attackType = db.AttackTypes[enemy.AttackId];
-
-            var allPaths = attackType.GetAllPaths(position);
-            var legalPaths = gameGrid.GetAllLegalEnemyPaths(allPaths);
-
-            var preferredPath = enemy.Behavior switch
-            {
-                EnemyBehaviors.MoveCloser => legalPaths.MinBy(q => (q.Last() - gameGrid.playerPosition).magnitude),
-                EnemyBehaviors.MoveAway => legalPaths.MaxBy(q => (q.Last() - gameGrid.playerPosition).magnitude),
-                _ => legalPaths[Random.Range(0, legalPaths.Count)]
-            };
-
-            gameGrid.MoveEnemy(enemy, preferredPath);
-        }
+        IsPlayerTurn = false;
+        gameGrid.ShadowManager.MoveShadow();
+        gameGrid.EnemyManager.MoveEnemies();
         IsPlayerTurn = true;
     }
 

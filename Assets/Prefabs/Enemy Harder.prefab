@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 2760540646038943955}
   - component: {fileID: 8434195734184100423}
   - component: {fileID: -619887640968677112}
+  - component: {fileID: -3299259644953422512}
   m_Layer: 0
   m_Name: Enemy Harder
   m_TagString: Untagged
@@ -101,6 +102,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79022affc7213154983dd6a17bb3100a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  movementAnimator: {fileID: -3299259644953422512}
   Behavior: 2
   AttackId: 1
 --- !u!61 &-619887640968677112
@@ -149,3 +151,16 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &-3299259644953422512
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8609646878354610927}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22d8834ccbe8900479b4fc65998e96dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 10

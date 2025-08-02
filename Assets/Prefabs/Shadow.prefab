@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 502572308336332061}
   - component: {fileID: 2155432047492483742}
   - component: {fileID: 4809741113439284770}
+  - component: {fileID: -3038862995609873781}
+  - component: {fileID: 8874842872931348567}
   m_Layer: 0
   m_Name: Shadow
   m_TagString: Player
@@ -162,3 +164,29 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &-3038862995609873781
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5915164008258361609}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f51bb0d24914aad4a8f6667153536102, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  movementAnimator: {fileID: 8874842872931348567}
+--- !u!114 &8874842872931348567
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5915164008258361609}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22d8834ccbe8900479b4fc65998e96dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 10

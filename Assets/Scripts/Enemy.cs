@@ -2,7 +2,11 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    
+    [SerializeField]
+    private MovementAnimator movementAnimator;
+
+    public MovementAnimator Animator => movementAnimator;
+
     [SerializeField]
     public EnemyBehaviors Behavior;
     [SerializeField]
