@@ -1,10 +1,11 @@
 fileFormatVersion: 2
-guid: bd2b361355eff564f92319542fe454d3
+guid: 6565a64ca966b3647b85734e25328d78
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -1426590219575050917
-    second: GargoylePixel_0
+      213: -8030475830406697162
+    second: "\u0431\u0435\u0437 \u044D\u043A\u0440\u0430\u043D\u0430 \u043B\u0435
+      \u043B\u0435 \u043B\u0435_0"
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -37,7 +38,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 0
+    filterMode: 1
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -113,13 +114,14 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: GargoylePixel_0
+      name: "\u0431\u0435\u0437 \u044D\u043A\u0440\u0430\u043D\u0430 \u043B\u0435
+        \u043B\u0435 \u043B\u0435_0"
       rect:
         serializedVersion: 2
-        x: 17
+        x: 0
         y: 0
-        width: 63
-        height: 91
+        width: 1280
+        height: 720
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +130,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: b5dbe22f0cbb33ce0800000000000000
-      internalID: -1426590219575050917
+      spriteID: 63faf3f87c40e8090800000000000000
+      internalID: -8030475830406697162
       vertices: []
       indices: 
       edges: []
@@ -148,7 +150,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      GargoylePixel_0: -1426590219575050917
+      "\u0431\u0435\u0437 \u044D\u043A\u0440\u0430\u043D\u0430 \u043B\u0435 \u043B\u0435 \u043B\u0435_0": -8030475830406697162
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

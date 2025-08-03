@@ -44,12 +44,6 @@ public class InventorySystem : MonoBehaviour
         }
     }
 
-    private void Start()
-    {
-        HideInventoryPanel();
-        gameManager.gameGrid.OnAllEnemiesKilled += ShowInventoryPanel;
-    }
-
 
 
     public void ShowInventoryPanel()
@@ -95,7 +89,7 @@ public class InventorySystem : MonoBehaviour
 
         var count = isItems ? 3 : uniqueAttackIds.Count + 3;
 
-        while (uniqueAttackIds.Count < count && uniqueAttackIds.Count < db.AttackTypes.Count)
+        while (uniqueAttackIds.Count < count && uniqueAttackIds.Count < db.AttackTypes.Count(q => q.WaveNumberUnlock < gameManager.gameGrid.WaveNumber))
         {
             var randomId = UnityEngine.Random.Range(0, db.AttackTypes.Count);
             if (uniqueAttackIds.Contains(randomId) || GetAttackTypeById(randomId).WaveNumberUnlock > gameManager.gameGrid.WaveNumber)
@@ -190,14 +184,6 @@ public class InventorySystem : MonoBehaviour
     }
 
     public bool AreAllItemsSelected => selectedAttackIds.Count == maxAttacks && selectedItemIds.Count == maxItems;
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            HideInventoryPanel();
-        }
-    }
 
     private int GetAvailableItemsCount()
     {

@@ -15,6 +15,6 @@ public class ConfirmButton : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        button.interactable = InventorySystem.Instance.AreAllItemsSelected;
+        button.interactable = InventorySystem.Instance?.AreAllItemsSelected ?? false;
     }
 }

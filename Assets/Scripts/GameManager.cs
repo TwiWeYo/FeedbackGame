@@ -19,6 +19,9 @@ public class GameManager : MonoBehaviour
 
     [SerializeField]
     private AttackDatabaseSO db;
+    [SerializeField]
+    private GameObject GameOverScreen;
+
     private int selectedAttackType = -1;
 
     private AttackButton selectedButton;
@@ -31,8 +34,21 @@ public class GameManager : MonoBehaviour
         IsPlayerTurn = true;
 
         gameGrid.PlayerManager.OnPlayerMoved += FinishAttacking;
+        gameGrid.OnAllEnemiesKilled += InventorySystem.Instance.ShowInventoryPanel;
+        gameGrid.OnGameOver += GameOver;
 
+        GameOverScreen.SetActive(false);
+
+        InventorySystem.Instance.HideInventoryPanel();
+        InventorySystem.Instance.OnSkillBuyExit += gameGrid.StartLevel;
         InventorySystem.Instance.OnSkillBuyExit += () => IsPlayerTurn = true;
+
+        gameGrid.StartLevel();
+    }
+
+    public void GameOver()
+    {
+        GameOverScreen.SetActive(true);
     }
 
     public void StartAttacking(int id, AttackButton attackButton, bool isItem)
@@ -50,7 +66,6 @@ public class GameManager : MonoBehaviour
         selectedButton = attackButton;
         isItemSelected = isItem;
 
-        gridVizualization.SetActive(true);
         cellIndicator.SetActive(true);
 
         HighlightAttackDestinations();
@@ -68,7 +83,6 @@ public class GameManager : MonoBehaviour
 
         gameGrid.PlayerManager.ClearIndicators();
 
-        gridVizualization.SetActive(false);
         cellIndicator.SetActive(false);
 
         inputManager.OnClicked -= Attack;

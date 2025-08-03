@@ -6,13 +6,17 @@ public class MovementAnimator : MonoBehaviour
 {
     [SerializeField]
     public float speed = 10f;
+    [SerializeField]
+    public float deathSpeed = 0.2f;
 
     private Vector3? targetPosition;
     
     private GameObject currentTarget;
     private bool isMoving = false;
-    
+    private bool isDying = false;
+
     public event Action OnMovementCompletedEvent;
+    public event Action OnDeadEvent;
 
     public void AddTargetPosition(Vector3 position)
     {
@@ -36,6 +40,35 @@ public class MovementAnimator : MonoBehaviour
         currentTarget = target;
         isMoving = true;
         StartCoroutine(AnimateMovementCoroutine());
+    }
+
+    public void AnimateDeath(GameObject target)
+    {
+        if (isDying)
+            return;
+
+        isDying = true;
+        currentTarget = target;
+        StartCoroutine(AnimateDeathCoroutine());
+    }
+
+    private IEnumerator AnimateDeathCoroutine()
+    {
+        var sprite = currentTarget.GetComponent<SpriteRenderer>();
+        if (sprite == null)
+            yield break;
+
+        while (sprite.color.a > 0)
+        {
+            var color = sprite.color;
+            color.a = Math.Max(color.a - deathSpeed, 0);
+            sprite.color = color;
+            yield return null;
+        }
+
+        isDying = false;
+        OnDeadEvent?.Invoke();
+        Destroy(gameObject);
     }
 
     private IEnumerator AnimateMovementCoroutine()

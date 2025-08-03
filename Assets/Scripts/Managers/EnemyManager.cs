@@ -49,11 +49,6 @@ public class EnemyManager : MonoBehaviour
 
             grid.SetEnemyPosition(enemy, point);
 
-            if (point == grid.playerPosition)
-            {
-                grid.GameOver();
-            }
-
             yield return null;
         }
     }
@@ -110,6 +105,6 @@ public class EnemyManager : MonoBehaviour
 
     public void RemoveEnemy(Enemy enemy)
     {
-        Destroy(enemy.gameObject);
+        enemy.Animator.AnimateDeath(enemy.gameObject);
     }
 }

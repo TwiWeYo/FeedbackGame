@@ -39,11 +39,11 @@ public class ShadowManager : MonoBehaviour
         return res;
     }
 
-    public bool IsDead() => shadow == null;
+    public bool IsDead => shadow == null;
 
     public void SpawnShadow()
     {
-        if (shadow != null)
+        if (!IsDead)
         {
             return;
         }
@@ -63,7 +63,7 @@ public class ShadowManager : MonoBehaviour
         var cellPosition = GetUpperCorner();
 
         shadow.transform.position = grid.GetWorldPosition(shadowPrefab.gameObject, cellPosition);
-        grid.SetShadowPosition(cellPosition);
+        grid.SetShadowPosition(cellPosition, true);
     }
 
     public void MoveShadow()
@@ -107,11 +107,8 @@ public class ShadowManager : MonoBehaviour
 
     public void RemoveShadow()
     {
-        if (shadow == null)
-            return;
+        shadow.Animator.AnimateDeath(shadow.gameObject);
 
-        Destroy(shadow.gameObject);
-        Destroy(shadow);
         shadow = null;
     }
 }

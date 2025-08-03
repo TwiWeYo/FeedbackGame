@@ -26,7 +26,7 @@ public class InventoryToggle : MonoBehaviour
             buttonComponent = GetComponent<Toggle>();
         }
 
-        buttonComponent.onValueChanged.AddListener(OnButtonClick);
+        buttonComponent?.onValueChanged.AddListener(OnButtonClick);
     }
     private void OnButtonClick(bool toggle)
     {

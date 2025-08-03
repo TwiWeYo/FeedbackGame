@@ -73,6 +73,12 @@ public class PlayerManager : MonoBehaviour
         OnPlayerMoved?.Invoke(moves);
     }
 
+    public void RemovePlayer()
+    {
+        player.Animator.AnimateDeath(player.gameObject);
+        player.Animator.OnDeadEvent += grid.GameOver;
+    }
+
     public bool PlaceIndicator(AttackPath attackPath)
     {
         var maxAvailablePosition = attackPath.Path.Cast<Vector3Int?>().LastOrDefault(q => grid.CheckBounds(q.Value));

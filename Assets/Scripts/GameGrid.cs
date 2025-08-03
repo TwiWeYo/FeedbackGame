@@ -28,13 +28,13 @@ public class GameGrid : MonoBehaviour
     public Dictionary<Vector3Int, Enemy> enemyPositions = new();
 
     public event Action OnAllEnemiesKilled;
+    public event Action OnGameOver;
     
     private void Start()
     {
-        InventorySystem.Instance.OnSkillBuyExit += StartLevel;
     }
 
-    private void StartLevel()
+    public void StartLevel()
     {
         shadowManager.SpawnShadow();
         playerManager.SpawnPlayer();
@@ -43,7 +43,7 @@ public class GameGrid : MonoBehaviour
 
     public bool CheckIfAllEnemiesKilled()
     {
-        if (enemyPositions.Count == 0 && shadowManager.IsDead())
+        if (enemyPositions.Count == 0 && shadowManager.IsDead)
         {
             OnAllEnemiesKilled?.Invoke();
             return true;
@@ -77,7 +77,7 @@ public class GameGrid : MonoBehaviour
 
         if (position == playerPosition)
         {
-            GameOver();
+            playerManager.RemovePlayer();
         }
 
         if (enemyPositions.ContainsKey(position))
@@ -90,19 +90,19 @@ public class GameGrid : MonoBehaviour
         enemyPositions.Add(position, enemy);
     }
 
-    public void SetShadowPosition(Vector3Int position)
+    public void SetShadowPosition(Vector3Int position, bool bypassGameOver = false)
     {
         shadowPosition = position;
         
-        if (position == playerPosition)
+        if (!bypassGameOver && position == playerPosition)
         {
-            GameOver();
+            playerManager.RemovePlayer();
         }
     }
 
     public void GameOver()
     {
-        Debug.Log("Game Over!");
+        OnGameOver?.Invoke();
     }
 
     public Vector3 GetWorldPosition(GameObject gameObject, Vector3Int cellPosition)
