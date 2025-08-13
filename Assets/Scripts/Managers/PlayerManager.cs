@@ -50,16 +50,9 @@ public class PlayerManager : MonoBehaviour
         {
             Vector3 worldPosition = grid.GetWorldPosition(player.Animator.gameObject, point);
 
-            player.Animator.AddTargetPosition(worldPosition);
+            var coroutine = player.Animator.MoveCoroutine(player.Animator.gameObject, worldPosition);
 
-            bool movementCompleted = false;
-            player.Animator.OnMovementCompletedEvent += () => { movementCompleted = true; };
-
-            player.Animator.StartMovement(player.Animator.gameObject);
-
-            yield return new WaitUntil(() => movementCompleted);
-
-            player.Animator.OnMovementCompletedEvent -= () => { movementCompleted = true; };
+            yield return StartCoroutine(coroutine);
 
             grid.SetPlayerPosition(point);
             moves.Add(grid.playerPosition);
@@ -73,10 +66,12 @@ public class PlayerManager : MonoBehaviour
         OnPlayerMoved?.Invoke(moves);
     }
 
-    public void RemovePlayer()
+    public IEnumerator RemovePlayerCoroutine()
     {
-        player.Animator.AnimateDeath(player.gameObject);
-        player.Animator.OnDeadEvent += grid.GameOver;
+        var coroutine = player.Animator.AnimateDeathCoroutine(player.gameObject);
+        yield return StartCoroutine(coroutine);
+
+        grid.GameOver();
     }
 
     public bool PlaceIndicator(AttackPath attackPath)

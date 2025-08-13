@@ -56,6 +56,8 @@ public class GameManager : MonoBehaviour
         if (!IsPlayerTurn)
             return;
 
+        gameGrid.ShadowManager.OnShadowMoved -= gameGrid.EnemyManager.MoveEnemies;
+
         selectedAttackType = db.AttackTypes.FindIndex(q => q.Id == id);
         if (selectedAttackType < 0)
         {
@@ -145,8 +147,8 @@ public class GameManager : MonoBehaviour
             return;
 
         IsPlayerTurn = false;
+        gameGrid.ShadowManager.OnShadowMoved += gameGrid.EnemyManager.MoveEnemies;
         gameGrid.ShadowManager.MoveShadow();
-        gameGrid.EnemyManager.MoveEnemies();
         IsPlayerTurn = true;
     }
 

@@ -15,7 +15,7 @@ MonoBehaviour:
   AttackTypes:
   - <Id>k__BackingField: 0
     <AttackName>k__BackingField: King
-    <AttackIcon>k__BackingField: {fileID: 0}
+    <AttackIcon>k__BackingField: {fileID: 7746945478094484552, guid: f2e9cae0c2c027549b9b7c2cd5656cb8, type: 3}
     <Description>k__BackingField: 
     <WaveNumberUnlock>k__BackingField: 0
     <IsItem>k__BackingField: 0
@@ -32,60 +32,88 @@ MonoBehaviour:
     <AttackedFields>k__BackingField: []
     <MoveBehavior>k__BackingField: 0
   - <Id>k__BackingField: 1
-    <AttackName>k__BackingField: Queen
-    <AttackIcon>k__BackingField: {fileID: 0}
+    <AttackName>k__BackingField: Skeleton
+    <AttackIcon>k__BackingField: {fileID: -8033860880000893823, guid: 58dd3c0920c21df4a8aceed67276db0a, type: 3}
+    <Description>k__BackingField: 
+    <WaveNumberUnlock>k__BackingField: 0
+    <IsItem>k__BackingField: 0
+    <IsOnlyForEnemies>k__BackingField: 1
+    <Paths>k__BackingField:
+    - 0
+    - 2
+    - 4
+    - 6
+    <AttackedFields>k__BackingField: []
+    <MoveBehavior>k__BackingField: 0
+  - <Id>k__BackingField: 2
+    <AttackName>k__BackingField: Bishop
+    <AttackIcon>k__BackingField: {fileID: 8330043408871857085, guid: be639603c4fd7094cb00a49f707bcb4b, type: 3}
     <Description>k__BackingField: 
     <WaveNumberUnlock>k__BackingField: 3
     <IsItem>k__BackingField: 0
     <IsOnlyForEnemies>k__BackingField: 0
     <Paths>k__BackingField:
-    - 00000
-    - 11111
-    - 22222
-    - 33333
-    - 44444
-    - 55555
-    - 66666
-    - 77777
+    - 11
+    - 33
+    - 55
+    - 77
     <AttackedFields>k__BackingField: []
     <MoveBehavior>k__BackingField: 0
-  - <Id>k__BackingField: 2
-    <AttackName>k__BackingField: Knight
-    <AttackIcon>k__BackingField: {fileID: 0}
+  - <Id>k__BackingField: 4
+    <AttackName>k__BackingField: Queen
+    <AttackIcon>k__BackingField: {fileID: -8165864275683256278, guid: 05c166d2e4a0164419b1fb0f7030a031, type: 3}
     <Description>k__BackingField: 
-    <WaveNumberUnlock>k__BackingField: 0
+    <WaveNumberUnlock>k__BackingField: 17
+    <IsItem>k__BackingField: 1
+    <IsOnlyForEnemies>k__BackingField: 0
+    <Paths>k__BackingField:
+    - 000
+    - 111
+    - 222
+    - 333
+    - 444
+    - 555
+    - 666
+    - 777
+    <AttackedFields>k__BackingField: []
+    <MoveBehavior>k__BackingField: 2
+  - <Id>k__BackingField: 3
+    <AttackName>k__BackingField: Knight
+    <AttackIcon>k__BackingField: {fileID: 1059176895909531080, guid: 7cd4fdd6a330f1b42bc7d8ed6ea98346, type: 3}
+    <Description>k__BackingField: 
+    <WaveNumberUnlock>k__BackingField: 7
     <IsItem>k__BackingField: 0
     <IsOnlyForEnemies>k__BackingField: 0
     <Paths>k__BackingField:
     - 002
     - 006
-    - 220
     - 224
+    - 220
     - 442
     - 446
+    - 6624
     - 660
-    - 664
     <AttackedFields>k__BackingField: []
-    <MoveBehavior>k__BackingField: 2
-  - <Id>k__BackingField: 3
-    <AttackName>k__BackingField: Bishop
-    <AttackIcon>k__BackingField: {fileID: 0}
+    <MoveBehavior>k__BackingField: 0
+  - <Id>k__BackingField: 5
+    <AttackName>k__BackingField: Rook
+    <AttackIcon>k__BackingField: {fileID: -8033860880000893823, guid: 58dd3c0920c21df4a8aceed67276db0a, type: 3}
     <Description>k__BackingField: 
-    <WaveNumberUnlock>k__BackingField: 0
+    <WaveNumberUnlock>k__BackingField: 5
     <IsItem>k__BackingField: 0
     <IsOnlyForEnemies>k__BackingField: 0
     <Paths>k__BackingField:
-    - 111
-    - 333
-    - 555
-    - 777
+    - 00
+    - 22
+    - 44
+    - 66
     <AttackedFields>k__BackingField: []
     <MoveBehavior>k__BackingField: 0
-  - <Id>k__BackingField: 4
-    <AttackName>k__BackingField: Rook
-    <AttackIcon>k__BackingField: {fileID: 0}
+  - <Id>k__BackingField: 6
+    <AttackName>k__BackingField: Rook+
+    <AttackIcon>k__BackingField: {fileID: -2125106289195894119, guid: 0c175857c9b97024a95c719d9d49e2a6, type: 3}
     <Description>k__BackingField: 
-    <WaveNumberUnlock>k__BackingField: 0
+    <WaveNumberUnlock>k__BackingField: 10
     <IsItem>k__BackingField: 0
     <IsOnlyForEnemies>k__BackingField: 0
     <Paths>k__BackingField:
@@ -93,5 +121,69 @@ MonoBehaviour:
     - 222
     - 444
     - 666
+    <AttackedFields>k__BackingField: []
+    <MoveBehavior>k__BackingField: 0
+  - <Id>k__BackingField: 7
+    <AttackName>k__BackingField: Bishop+
+    <AttackIcon>k__BackingField: {fileID: -6301516058808053472, guid: a22faf934c76204438b247be5ab9c0c8, type: 3}
+    <Description>k__BackingField: 
+    <WaveNumberUnlock>k__BackingField: 13
+    <IsItem>k__BackingField: 0
+    <IsOnlyForEnemies>k__BackingField: 0
+    <Paths>k__BackingField:
+    - 1111
+    - 2222
+    - 4444
+    - 6666
+    <AttackedFields>k__BackingField: []
+    <MoveBehavior>k__BackingField: 0
+  - <Id>k__BackingField: 8
+    <AttackName>k__BackingField: Knight+
+    <AttackIcon>k__BackingField: {fileID: -2125106289195894119, guid: 0c175857c9b97024a95c719d9d49e2a6, type: 3}
+    <Description>k__BackingField: 
+    <WaveNumberUnlock>k__BackingField: 17
+    <IsItem>k__BackingField: 1
+    <IsOnlyForEnemies>k__BackingField: 0
+    <Paths>k__BackingField:
+    - 0002
+    - 0006
+    - 2220
+    - 2224
+    - 4442
+    - 4446
+    - 6660
+    - 6664
+    <AttackedFields>k__BackingField: []
+    <MoveBehavior>k__BackingField: 0
+  - <Id>k__BackingField: 9
+    <AttackName>k__BackingField: Rook++
+    <AttackIcon>k__BackingField: {fileID: -5685582796524505039, guid: 6cb4c95e2301a4740960ae5134f8a476, type: 3}
+    <Description>k__BackingField: 
+    <WaveNumberUnlock>k__BackingField: 23
+    <IsItem>k__BackingField: 0
+    <IsOnlyForEnemies>k__BackingField: 0
+    <Paths>k__BackingField:
+    - 0000
+    - 2222
+    - 4444
+    - 6666
+    <AttackedFields>k__BackingField: []
+    <MoveBehavior>k__BackingField: 0
+  - <Id>k__BackingField: 10
+    <AttackName>k__BackingField: Queen+
+    <AttackIcon>k__BackingField: {fileID: 168684458268901836, guid: 2572b66747155cc45be2117934cb581d, type: 3}
+    <Description>k__BackingField: 
+    <WaveNumberUnlock>k__BackingField: 32
+    <IsItem>k__BackingField: 0
+    <IsOnlyForEnemies>k__BackingField: 0
+    <Paths>k__BackingField:
+    - 0000
+    - 1111
+    - 2222
+    - 3333
+    - 4444
+    - 5555
+    - 6666
+    - 7777
     <AttackedFields>k__BackingField: []
     <MoveBehavior>k__BackingField: 0

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class GameGrid : MonoBehaviour
 {
@@ -11,6 +12,10 @@ public class GameGrid : MonoBehaviour
     public int gridSize;
     [SerializeField]
     private Grid grid;
+    [SerializeField]
+    private Tilemap tilemap;
+    [SerializeField]
+    private TileBase[] tiles;
 
     [SerializeField]
     private PlayerManager playerManager;
@@ -39,6 +44,23 @@ public class GameGrid : MonoBehaviour
         shadowManager.SpawnShadow();
         playerManager.SpawnPlayer();
         enemyManager.SpawnEnemies(++WaveNumber);
+
+        GenerateTiles();
+    }
+
+    private void GenerateTiles()
+    {
+        tilemap.ClearAllTiles();
+
+        for (int x = 0; x < gridSize; x++)
+        {
+            for (int y = 0; y < gridSize; y++)
+            {
+                var randomTile = tiles[UnityEngine.Random.Range(0, tiles.Length)];
+                var cellPosition = new Vector3Int(x, y, 0);
+                tilemap.SetTile(cellPosition, randomTile);
+            }
+        }
     }
 
     public bool CheckIfAllEnemiesKilled()
@@ -58,7 +80,7 @@ public class GameGrid : MonoBehaviour
 
         if (enemyPositions.ContainsKey(position))
         {
-            enemyManager.RemoveEnemy(enemyPositions[position]);
+            enemyManager.RemoveEnemyCoroutine(enemyPositions[position]);
             enemyPositions.Remove(position);
 
             return;
@@ -70,21 +92,26 @@ public class GameGrid : MonoBehaviour
         }
     }
 
-    public void SetEnemyPosition(Enemy enemy, Vector3Int position)
+    public void SetEnemyPosition(Enemy enemy, Vector3Int position, bool isBypass = true)
     {
         var currentPosition = enemyPositions.First(q => q.Value == enemy).Key;
         enemyPositions.Remove(currentPosition);
-
-        if (position == playerPosition)
-        {
-            playerManager.RemovePlayer();
-        }
 
         if (enemyPositions.ContainsKey(position))
         {
             enemyPositions.Add(currentPosition, enemy);
             Debug.LogWarning("Не нашлось свободного места для enemy");
             return;
+        }
+
+        if (position == playerPosition)
+        {
+            playerManager.RemovePlayerCoroutine();
+        }
+
+        if (position == shadowPosition && !isBypass)
+        {
+            enemyManager.RemoveEnemyCoroutine(enemyPositions[position]);
         }
 
         enemyPositions.Add(position, enemy);
@@ -96,7 +123,13 @@ public class GameGrid : MonoBehaviour
         
         if (!bypassGameOver && position == playerPosition)
         {
-            playerManager.RemovePlayer();
+            playerManager.RemovePlayerCoroutine();
+        }
+
+        if (enemyPositions.ContainsKey(position))
+        {
+            enemyManager.RemoveEnemyCoroutine(enemyPositions[position]);
+            enemyPositions.Remove(position);
         }
     }
 

@@ -1,4 +1,5 @@
 using Assets.Scripts;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +19,8 @@ public class ShadowManager : MonoBehaviour
     private List<List<Vector3Int>> lastShadowMoveset = new();
 
     private int turnNumber;
+
+    public event Action OnShadowMoved;
 
     private Vector3Int GetUpperCorner() => new Vector3Int(grid.gridSize - 1, grid.gridSize - 1);
 
@@ -74,10 +77,16 @@ public class ShadowManager : MonoBehaviour
     public IEnumerator MoveShadowCoroutine()
     {
         if (shadow == null)
+        {
+            OnShadowMoved?.Invoke();
             yield break;
+        }
 
         if (lastShadowMoveset.Count == 0)
+        {
+            OnShadowMoved?.Invoke();
             yield break;
+        }
 
         foreach (var point in lastShadowMoveset[turnNumber])
         {
@@ -85,13 +94,9 @@ public class ShadowManager : MonoBehaviour
                 ? GetUpperCorner() - point
                 : point;
 
-            bool movementCompleted = false;
-            shadow.Animator.OnMovementCompletedEvent += () => { movementCompleted = true; };
+            var coroutine = shadow.Animator.MoveCoroutine(shadow.gameObject, grid.GetWorldPosition(shadowPrefab.gameObject, mirroredPoint));
 
-            shadow.Animator.AddTargetPosition(grid.GetWorldPosition(shadowPrefab.gameObject, mirroredPoint));
-            shadow.Animator.StartMovement(shadow.gameObject);
-
-            yield return new WaitUntil(() => movementCompleted);
+            yield return StartCoroutine(coroutine);
 
             grid.SetShadowPosition(mirroredPoint);
         }
@@ -103,12 +108,13 @@ public class ShadowManager : MonoBehaviour
         {
             isMirrored = !isMirrored;
         }
+
+        OnShadowMoved?.Invoke();
     }
 
     public void RemoveShadow()
     {
-        shadow.Animator.AnimateDeath(shadow.gameObject);
-
+        shadow?.Animator.AnimateDeathCoroutine(shadow.gameObject);
         shadow = null;
     }
 }

@@ -22,7 +22,6 @@ public class AttackPath : MonoBehaviour
     public void AddPointToPath(GameObject obj)
     {
         pathVizualization.Add(obj);
-        obj.SetActive(false);
     }
 
     public void DestroySelfAndChildren(AttackPath attackPath)
@@ -31,32 +30,11 @@ public class AttackPath : MonoBehaviour
         Destroy(attackPath);
     }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            ActivatePathHighlight(true);
-        }
-
-        else if (Input.GetKeyUp(KeyCode.E))
-        {
-            ActivatePathHighlight(false);
-        }
-    }
-
     private void OnDestroy()
     {
         foreach (var path in pathVizualization)
         {
             Destroy(path);
-        }
-    }
-
-    private void ActivatePathHighlight(bool active)
-    {
-        foreach (var path in pathVizualization)
-        {
-            path.SetActive(active);
         }
     }
 

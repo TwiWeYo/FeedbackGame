@@ -104,7 +104,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movementAnimator: {fileID: 2514448416426344377}
   Behavior: 0
-  AttackId: 0
+  AttackId: 1
 --- !u!61 &-619887640968677112
 BoxCollider2D:
   m_ObjectHideFlags: 0

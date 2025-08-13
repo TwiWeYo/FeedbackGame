@@ -103,7 +103,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movementAnimator: {fileID: 7490079081719145699}
   Behavior: 0
-  AttackId: 3
+  AttackId: 2
 --- !u!114 &7490079081719145699
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -33,7 +33,7 @@ public class InventorySystem : MonoBehaviour
 
     public event Action OnSkillBuyExit;
 
-    private const int maxAttacks = 2;
+    private int maxAttacks = 2;
     private int maxItems = 0;
 
     void Awake()
@@ -44,18 +44,21 @@ public class InventorySystem : MonoBehaviour
         }
     }
 
-
+    private void Start()
+    {
+        attackButtons[0].Setup(db.AttackTypes[0]);
+    }
 
     public void ShowInventoryPanel()
     {
         skillBuyPanel.SetActive(true);
 
-        SetupButtons(false);
-        SetupButtons(true);
+        SetupButtons();
 
         selectedAttackIds.Clear();
         selectedItemIds.Clear();
 
+        maxAttacks = Math.Min(2, db.AttackTypes.Count(q => !q.IsOnlyForEnemies && !q.IsItem && q.WaveNumberUnlock <= gameManager.gameGrid.WaveNumber));
         maxItems = GetAvailableItemsCount();
     }
 
@@ -75,41 +78,33 @@ public class InventorySystem : MonoBehaviour
         OnSkillBuyExit?.Invoke();
     }
 
-    private void SetupButtons(bool isItems)
+    private void SetupButtons()
     {
-        if (isItems && gameManager.gameGrid.WaveNumber < 3)
+        var availableAttacks = db.AttackTypes.Where(q => !q.IsOnlyForEnemies && !q.IsItem && q.WaveNumberUnlock <= gameManager.gameGrid.WaveNumber).ToList();
+        var availableItems = db.AttackTypes.Where(q => !q.IsOnlyForEnemies && q.IsItem && q.WaveNumberUnlock <= gameManager.gameGrid.WaveNumber).ToList();
+
+        foreach (var attack in availableAttacks)
         {
+            var newButton = AddButtonToGrid(attacksLayout, attack);
+            newButton.isItemButton = false;
+            buyButtons.Add(newButton);
+        }
+
+        if (availableItems.Count == 0)
             return;
-        }
 
-        var uniqueAttackIds = attackButtons
-            .Select(q => q.attackId)
-            .Where(q => q >= 0)
-            .ToHashSet();
-
-        var count = isItems ? 3 : uniqueAttackIds.Count + 3;
-
-        while (uniqueAttackIds.Count < count && uniqueAttackIds.Count < db.AttackTypes.Count(q => q.WaveNumberUnlock < gameManager.gameGrid.WaveNumber))
+        foreach (var item in availableItems)
         {
-            var randomId = UnityEngine.Random.Range(0, db.AttackTypes.Count);
-            if (uniqueAttackIds.Contains(randomId) || GetAttackTypeById(randomId).WaveNumberUnlock > gameManager.gameGrid.WaveNumber)
-                continue;
-
-            uniqueAttackIds.Add(randomId);
-        }
-
-        foreach (var attackId in uniqueAttackIds)
-        {
-            var newButton = AddButtonToGrid(isItems ? itemsLayout : attacksLayout, attackId);
-            newButton.isItemButton = isItems;
+            var newButton = AddButtonToGrid(itemsLayout, item);
+            newButton.isItemButton = true;
             buyButtons.Add(newButton);
         }
     }
 
-    private InventoryToggle AddButtonToGrid(LayoutGroup group, int attackType)
+    private InventoryToggle AddButtonToGrid(LayoutGroup group, AttackType attackType)
     {
         var button = Instantiate(inventoryButtonPrefab);
-        button.Setup(GetAttackTypeById(attackType));
+        button.Setup(attackType);
         button.transform.SetParent(group.transform, false);
 
         button.SetToggleState(true, false);
@@ -187,11 +182,13 @@ public class InventorySystem : MonoBehaviour
 
     private int GetAvailableItemsCount()
     {
-        return gameManager.gameGrid.WaveNumber switch
+        var max = gameManager.gameGrid.WaveNumber switch
         {
-            int num when num < 3 => 0,
-            int num when num < 5 => 1,
+            int num when num < 13 => 0,
+            int num when num < 20 => 1,
             _ => 2
         };
+
+        return Math.Min(max, db.AttackTypes.Count(q => !q.IsOnlyForEnemies && q.IsItem && q.WaveNumberUnlock <= gameManager.gameGrid.WaveNumber));
     }
 }

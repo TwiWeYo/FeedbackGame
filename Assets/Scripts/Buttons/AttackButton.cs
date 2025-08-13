@@ -49,9 +49,6 @@ public class AttackButton : MonoBehaviour
         }
         else
         {
-            if (skillIconImage?.sprite != null)
-                skillIconImage.sprite = null;
-
             if (skillNameText != null)
                 skillNameText.text = isItem ? "Used!" : "Locked";
 
